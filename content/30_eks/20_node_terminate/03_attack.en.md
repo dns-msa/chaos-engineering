@@ -1,0 +1,42 @@
+---
+title: "3. Attack - Terminate EKS Node Instances"
+chapter: false
+weight: 13
+---
+
+## Start Experiment
+
+Make sure that all your EKS node group instances are running. 
+```sh
+kubectl get nodes
+```
+
+Go to the AWS FIS service page and select TerminateEKSNodes from the list of experiment templates. Then use the on-screen Actions button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down. When the experiment started, you can see the terminated instances on the EC2 service page, and you will see the new instances will appear shortly after the EKS node is shut down.
+
+![aws-fis-terminate-eks-nodes](/images/30_eks/aws-fis-terminate-eks-nodes.png)
+
+![aws-fis-terminate-eks-nodes-action-complete](/images/30_eks/aws-fis-terminate-eks-nodes-action-complete.png)
+
+## Result
+
+You can see the nodes being shut down in the cluster:
+```sh
+kubectl -n sockshop get node -w
+```
+```sh
+NAME                                            STATUS   ROLES    AGE     VERSION
+ip-10-1-1-205.ap-northeast-2.compute.internal   Ready    <none>   21m     v1.20.4-eks-6b7464
+ip-10-1-9-221.ap-northeast-2.compute.internal   Ready    <none>   4m40s   v1.20.4-eks-6b7464
+ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
+ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
+```
+
+## Architecture Improvements
+
+## Discussion
+
+실험 계획과 예상 결과를 작성해보기 (5분 작성 / 10분 발표 토론)
+
+## Rerun Experiment
+
+# Postmortem - Learning from Failure
