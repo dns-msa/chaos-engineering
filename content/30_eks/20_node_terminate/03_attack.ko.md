@@ -1,5 +1,5 @@
 ---
-title: "3. Attack - EKS 노드 인스턴스 종료"
+title: "3. 장애 주입 실험"
 chapter: false
 weight: 13
 ---

@@ -1,5 +1,5 @@
 ---
-title: "3. Attack - Terminate EKS Node Instances"
+title: "3. Fault Injection Experiment"
 chapter: false
 weight: 13
 ---
