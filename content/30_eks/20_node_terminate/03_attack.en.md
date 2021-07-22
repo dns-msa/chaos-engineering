@@ -11,7 +11,7 @@ Make sure that all your EKS node group instances are running.
 kubectl get nodes
 ```
 
-Go to the AWS FIS service page and select TerminateEKSNodes from the list of experiment templates. Then use the on-screen Actions button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down. When the experiment started, you can see the terminated instances on the EC2 service page, and you will see the new instances will appear shortly after the EKS node is shut down.
+Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen **Actions** button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down. When the experiment started, you can see the terminated instances on the EC2 service page, and you will see the new instances will appear shortly after the EKS node is shut down.
 
 ![aws-fis-terminate-eks-nodes](/images/30_eks/aws-fis-terminate-eks-nodes.png)
 
@@ -34,6 +34,7 @@ ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.2
 ## Architecture Improvements
 
 Cluster Autoscaler is a tool that automatically adjusts the size of the Kubernetes cluster when one of the following conditions is true:
+
 + there are pods that failed to run in the cluster due to insufficient resources.
 + there are nodes in the cluster that have been underutilized for an extended period of time and their pods can be placed on other existing nodes.
 
