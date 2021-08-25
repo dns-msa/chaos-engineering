@@ -79,6 +79,9 @@ cd ~/environment/chaos-fis-workshop
 
 ```
 cd ~/environment/chaos-fis-workshop
+sudo yum install -y jq
+sudo npm install -g aws-cdk
+cdk --version
 ./chaos-00-deploy-all.sh
 ```
 
