@@ -1,5 +1,5 @@
 ---
-title: "2. 모니터링 환경구성"
+title: "모니터링 환경 체크"
 chapter: false
 weight: 20
 ---
@@ -17,3 +17,4 @@ product-composite/TargetResponse/p90 메트릭의 경우 0.2~0.4초 내외의 �
 ![image](/images/20_ec2/monitoring_03.png)
 
 ## X-Ray
+TODO

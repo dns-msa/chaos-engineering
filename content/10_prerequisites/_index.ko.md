@@ -6,4 +6,4 @@ weight: 20
 
 # 실습 환경 구성
 
-{{% children showhidden="true" %}}
+{{% children showhidden="false" %}}
