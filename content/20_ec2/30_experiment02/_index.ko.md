@@ -1,7 +1,7 @@
 ---
 title: "실험 #2 - CPU 부하 발생"
 chapter: true
-weight: 10
+weight: 30
 ---
 
 ## 실험 #2 - CPU 부하 발생

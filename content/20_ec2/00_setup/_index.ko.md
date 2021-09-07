@@ -8,7 +8,7 @@ draft: false
 # 실습 환경 준비하기
 
 준비과정을 마치면 실습을 위해 간단하게 구현된 아래의 데모 애플리케이션이 배포됩니다.
-![image](/images/architecture.png)
+![image](/images/20_ec2/architecture.png)
 
 데모 애플리케이션은 크게 4가지의 마이크로서비스로 구성되어 있으며, product, review, recommendation은 각자의 독립적인 서비스입니다.
 

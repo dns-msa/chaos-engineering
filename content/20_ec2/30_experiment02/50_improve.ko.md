@@ -3,171 +3,45 @@ title: "개선사항 적용 및 검증"
 chapter: false
 weight: 50
 ---
-<style>
-div.sourceCode::before {
-    content: attr(data-filename);
-    display: block;
-    background-color: #cfeadd;
-    font-family: monospace;
-}
-</style>
+
 ### 개선사항 적용
+EC2의 초기화 과정에서 많은 시간이 소요되는 것을 개선하기 위해 AutoScaling에서 제공하는 Warm Pool을 적용해 보겠습니다.
 
-단순히 좀 더 짧은 타임아웃을 주는 방법도 생각해 볼 수 있으나, 지연이 길어지고 요청량이 많아지면 결국 장애로 이어집니다.
+먼저 콘솔에서 EC2 서비스로 이동한 뒤 좌측메뉴에서 Auto Scaling Groups를 선택하고 **ChaosProductCompositeStack-productCompositeAsgXXXX** 항목을 클릭합니다.
+![image](/images/20_ec2/experiment02_13.png)
 
-따라서 서킷브레이커 패턴을 적용하여 장애가 지속되면 서킷을 열고 폴백 응답을 보내는 방식으로 개선합니다. 이를 위해 여기에서는 resilience4j를 적용합니다.
+**Instance management** 탭을 선택하고 하단의 **Create warm pool** 버튼을 클릭합니다.
+![image](/images/20_ec2/experiment02_14.png)
 
-**CircuitBreaker가 동작할 수 있도록 아래 코드에서 @CircuitBreaker annotation에 있는 주석을 해제하고 저장합니다.**
+**Minimum warm pool size** `2`를 입력하고 **Create** 버튼을 클릭합니다.
+![image](/images/20_ec2/experiment02_15.png)
 
-* 파일위치
-```bash
-~/environment/fisworkshop/ec2/product-composite/src/main/java/com/skipio/demo/chaos/fis/composite/product/RecommendationService.java
-```
+잠시 기다리면 Warm pool instances 영역에 인스턴스가 추가된 것을 확인할 수 있습니다.
+![image](/images/20_ec2/experiment02_16.png)
 
-* 수정전
-```java
-// @CircuitBreaker(name = "recommendation", fallbackMethod = "fallback")
-public List<ProductComposite.Recommendation> getRecommendations(String productId){
-    List<ProductComposite.Recommendation> recommendations = restTemplate.exchange("http://recommendation/products/"+productId+"/recommendations", HttpMethod.GET, null, new ParameterizedTypeReference<List<ProductComposite.Recommendation>>() {}).getBody();
-    return recommendations;
-}
-```
+그리고 Activity 탭으로 넘어가면 새로운 인스턴스가 추가되는 과정을 확인할 수 있습니다.
+![image](/images/20_ec2/experiment02_17.png)
 
-* 수정후
-```java
-@CircuitBreaker(name = "recommendation", fallbackMethod = "fallback")
-public List<ProductComposite.Recommendation> getRecommendations(String productId){
-    List<ProductComposite.Recommendation> recommendations = restTemplate.exchange("http://recommendation/products/"+productId+"/recommendations", HttpMethod.GET, null, new ParameterizedTypeReference<List<ProductComposite.Recommendation>>() {}).getBody();
-    return recommendations;
-}
-```
+Warm Pool에 인스턴스가 생성되기까지 대략 5분의 시간이 소요되었습니다.
+![image](/images/20_ec2/experiment02_18.png)
 
-* 좀 더 코드를 살펴보면 CircuitBreaker 실패 시 처리되는 fallback 함수가 설정된 것을 볼 수 있습니다.
-```java
-public List<ProductComposite.Recommendation> fallback(Exception e){
-    List<ProductComposite.Recommendation> recommendations = new ArrayList<>();
-    ProductComposite.Recommendation recommendation = new ProductComposite.Recommendation();
-    recommendation.setAuthor("fallback author");
-    recommendation.setContent("fallback comment");
-    recommendation.setProductId("fallback productId");
-    recommendation.setRate(0);
-    recommendation.setRecommendationId("fallback recommendationId");
+이제 콘솔에서 EC2의 서비스로 이동한 뒤 좌측메뉴에서 Instances 를 선택합니다. 아래와 같이 Stopped 상태의 인스턴스가 2개 추가된 것을 볼 수 있습니다.
+![image](/images/20_ec2/experiment02_19.png)
 
-    recommendations.add(recommendation);
-    
-    sleep(50 + RandomUtils.nextInt(51));
-    
-    return recommendations;
-}
-```
-
-**Cloud9에서 아래의 명령어를 실행하여 코드를 재배포 합니다.**  배포가 완료되기까지 대략 2,3분 정도 기다립니다.
-
-```bash
-cd ~/environment/fisworkshop/ec2/
-./chaos-04-redeploy-product-composite.sh
-
-```
+Warm Pool은 시간이 많이 걸리는 인스턴스의 초기화 단계를 미리 진행한 후 인스턴스를 Stopped 상태로 관리함으로써 인스턴스의 확장시간을 단축시키고 비용을 최적화 할 수 있습니다.
 
 ### 실험 반복을 통한 개선사항 확인
-배포가 완료되면 **원인파악 및 개선사항 도출**로 돌아가서 다시 실험을 진행합니다.
+이제 **장애주입** 단계로 돌아가서 다시 실험을 진행합니다.
 
-이제 recommendation 서비스에 지속적인 지연이 발생하면, 서킷이 열리고 폴백 응답을 주어 지속적인 지연이 발생하지 않습니다.
+실험이 진행되고 인스턴스가 확장되면 아래와 같이 Warm Pool에서 실행되는 인스턴스는 확장에 1분 30초 정도 소요되었습니다.
+![image](/images/20_ec2/experiment02_20.png)
 
-![image](/images/20_ec2/improvement_04.png)
-
-***공격 중에 Cloud9에서 아래의 명령어를 실행하여 현재의 발생하는 응답의 상세내용을 확인합니다.***
-
-recommendations의 상세내역을 보면 정상적인 응답이 아니라 fallback에 설정한 응답이 나오는 것을 볼 수 있습니다.
-
-```
-cd ~/environment/fisworkshop/ec2/
-./chaos-05-check-response-product-composite.sh
-```
-
-```bash
-TeamRole:~/environment/fisworkshop/ec2 (main) $ ./chaos-05-check-response-product-composite.sh
-request to http://Chaos-produ-XMHKGLMY5Y8O-882044339.us-east-1.elb.amazonaws.com/product-composites/product-001
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   647    0   647    0     0    110      0 --:--:--  0:00:05 --:--:--   177
-{
-  "product": {
-    "productId": "product-001",
-    "productName": "product OeyHH",
-    "weight": 10
-  },
-  "reviews": [
-    ...
-    {
-      "productId": "product-001",
-      "reviewId": "review-003",
-      "author": "author EEgVR",
-      "subject": "subject JFOQl",
-      "content": "contents USzZs"
-    }
-  ],
-  "recommendations": [
-    {
-      "productId": "fallback productId",
-      "recommendationId": "fallback recommendationId",
-      "author": "fallback author",
-      "rate": 0,
-      "content": "fallback comment"
-    }
-  ]
-}
-```
-
-
-실험이 끝나면 서킷이 다시 닫히고 다시 정상적으로 recommendations의 응답이 출력되는 것을 확인할 수 있습니다.
-![image](/images/20_ec2/improvement_06.png)
-
-```bash
-TeamRole:~/environment/fisworkshop/ec2 (main) $ ./chaos-05-check-response-product-composite.sh
-request to http://Chaos-produ-XMHKGLMY5Y8O-882044339.us-east-1.elb.amazonaws.com/product-composites/product-001
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  1012    0  1012    0     0   2214      0 --:--:-- --:--:-- --:--:--  2214
-{
-  "product": {
-    "productId": "product-001",
-    "productName": "product wUMsw",
-    "weight": 18
-  },
-  "reviews": [
-    ...
-    {
-      "productId": "product-001",
-      "reviewId": "review-003",
-      "author": "author GOLvL",
-      "subject": "subject fZxKf",
-      "content": "contents ySyxJ"
-    }
-  ],
-  "recommendations": [
-    ...
-    {
-      "productId": "product-001",
-      "recommendationId": "recommendation-003",
-      "author": "author uvnIW",
-      "rate": 3,
-      "content": "contents bXKNh"
-    },
-    {
-      "productId": "product-001",
-      "recommendationId": "recommendation-004",
-      "author": "author kOtrH",
-      "rate": 1,
-      "content": "contents eXOKj"
-    }
-  ]
-}
-```
+훨씬 더 빠르게 확장이 일어난 것입니다. 이 부분은 아래 Dynamic scaling policy에 따라 60초의 warm up 시간이 포함되어 있어 실제로는 30초 내에 새로운 인스턴스가 준비된 것입니다.
+![image](/images/20_ec2/experiment02_21.png)
 
 ### 포스트모텀 - 실패로부터 배우기
-장애나 지연이 지속될 때 문제가 있는 서비스로 계속 요청을 보내는 것은 장애의 해소를 지연시키고 오히려 확산시킬 수 있습니다. 따라서 이 때에는 [서킷브레이커 패턴](https://docs.aws.amazon.com/ko_kr/whitepapers/latest/modern-application-development-on-aws/circuit-breaker.html)을 적용하여 Fail Fast 전략을 가져가는 것이 사용자 경험을 높이고, 장애를 격리시킬 수 있는 방안입니다.
+카오스 엔지니어링은 무작위적으로 시스템을 파괴하는 행위가 아닙니다.
 
-실습에서 사용한 resilience4j는 Java언어에 한하여만 적용할 수 있다는 단점이 있습니다. AWS에서는 [AWS App Mesh](https://aws.amazon.com/ko/app-mesh/?aws-app-mesh-blogs.sort-by=item.additionalFields.createdDate&aws-app-mesh-blogs.sort-order=desc&whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) 서비스를 이용하여 사용하는 언어에 관계없이 이러한 서킷 브레이커 패턴을 적용할 수 있고, 애플리케이션의 가시성을 가져갈 수 있습니다.
+여러가지 실험을 통해 사전에 대비를 하고 우리가 가진 시스템의 한계를 찾아내고 이를 지속적으로 개선하는 과정입니다.
 
-또한 비즈니스에 따라 비동기 방식의 처리, 그리고 격벽패턴을 적용하는 것도 시스템을 안정적으로 운영할 수 있는 방법입니다.
+이를 통하여 장애가 발생하더라도 당황하지 않고 보다 체계적으로 대응할 수 있습니다.

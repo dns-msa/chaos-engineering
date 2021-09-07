@@ -1,6 +1,6 @@
 ---
 title: "정상상태 정의"
-weight: 1
+weight: 10
 chapter: false
 draft: false
 ---
@@ -41,4 +41,4 @@ draft: false
 ![image](/images/20_ec2/steady-state_07.png)
 ![image](/images/20_ec2/steady-state_08.png)
 
-***여기에서 중요한 것은 단순히 CPU, Memory, 응답속도와 같은 단순한 기계적인 메트릭이 아니라 비즈니스의 목표에 보다 부합하는 정상상태를 확인하고 이를 모니터링 하는 것입니다.***
+**여기에서 중요한 것은 단순히 CPU, Memory, 응답속도와 같은 단순한 기계적인 메트릭이 아니라 비즈니스의 목표에 보다 부합하는 정상상태를 확인하고 이를 모니터링 하는 것입니다.**

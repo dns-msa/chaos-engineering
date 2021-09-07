@@ -5,52 +5,40 @@ weight: 40
 ---
 
 ### Action Item 도출 및 적용
+원인을 찾아보겠습니다. 아래 CloudWatch 대시보드에서 CPU 사용량을 보면, 부하가 발생해도 각 서비스의 CPU 사용량이 증가하지 않는 것을 볼 수 있습니다.
 
-product-composite 서비스는 recommendation 서비스를 Sync방식으로 호출하고 있습니다.
+서비스 어딘가에 병목이 있다고 생각해 볼 수 있습니다.
+![image](/images/20_ec2/experiment04_04.png)
 
-```bash
-~/environment/fisworkshop/ec2/product-composite/src/main/java/com/skipio/demo/chaos/fis/composite/product/RecommendationService.java 
-```
+각 서비스의 인스턴스 타입을 살펴보겠습니다. 콘솔에서 EC2 서비스로 이동하여 좌측의 Instances 메뉴를 클릭합니다.
 
-```java
-public List<ProductComposite.Recommendation> getRecommendations(String productId){
-    List<ProductComposite.Recommendation> recommendations = restTemplate.exchange("http://recommendation/products/"+productId+"/recommendations", HttpMethod.GET, null, new ParameterizedTypeReference<List<ProductComposite.Recommendation>>() {}).getBody();
-    return recommendations;
-}
-```
+loadGenerator를 제외한 나머지 인스턴스는 성능 순간 확장 가능 인스턴스 타입인 t3.micro 입니다.
+![image](/images/20_ec2/experiment04_05.png)
 
-또한 이때 타임아웃은 3초로 시간이 설정되어 있습니다.
+성능 순간 확장 가능 인스턴스는 Credit 모드에 따라서 Unlimited와 Standard로 나뉘어집니다.
 
-```bash
-~/environment/fisworkshop/ec2/product-composite/src/main/java/com/skipio/demo/chaos/fis/composite/product/AppConfig.java
-```
-
-```java
-@Bean
-public CloseableHttpClient defaultHttpClient() {
-    PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-    connectionManager.setMaxTotal(2000);
-    connectionManager.setDefaultMaxPerRoute(1000);
-
-    RequestConfig requestConfig = RequestConfig
-            .custom()
-            .setConnectionRequestTimeout(3000) // timeout to get connection from pool
-            .setSocketTimeout(3000) // standard connection timeout
-            .setConnectTimeout(3000) // standard connection timeout
-            .build();
-    return org.apache.http.impl.client.HttpClientBuilder.create()
-            .setConnectionManager(connectionManager)
-            .setDefaultRequestConfig(requestConfig)
-            .build();
-}
-```
+Standard 모두의 경우 누적된 Credit이 없는 경우, 스로틀링에 걸리게 됩니다. 이러한 인스턴스가 없는지 확인해보겠습니다.
 
 
+그리고 아래와 같이 **ChaosProductCompositeStack/productCompositeAsg** EC2 인스턴스 하나를 클릭하고, 상세화면을 살펴보겠습니다.
+![image](/images/20_ec2/experiment04_06.png)
 
-따라서 연계된 하나의 서비스만 지연되더라도 연쇄적으로 응답에 지연이 발생하고, 이는 product-composite의 가용 스레드를 소모하여 전체시스템에 영향을 주게 되었습니다. 
+상세화면의 하단을 살펴보면 **Credit specification** 이라는 부분이 보이고, 아래에 **unlimited**라고 표시되어 있습니다.
+![image](/images/20_ec2/experiment04_07.png)
 
-***한 서비스의 장애가 전체 서비스의 장애로 전파된 것입니다.***
+이번에는 **ChaosProductStack/productAsg** EC2 인스턴스 하나를 클릭하고, 상세화면을 살펴보겠습니다.
+
+상세화면의 하단을 살펴보면 **Credit specification** 이라는 부분이 보이고, 아래에 **standard**라고 표시되어 있습니다.
+![image](/images/20_ec2/experiment04_08.png)
+
+잔여 크레딧이 있는지 모니터링 탭을 살펴보겠습니다. 아래와 같이 Monitoring 탭을 클릭하고 하단의 **CPU credit usage**, **CPU credit balance** 메트릭을 살펴보겠습니다.
+
+잔여크레딧이 남아있지 않습니다. 이러한 경우 성능 순간 확장 가능 인스턴스는 세대와 타입에 따른 기준에 따라 스로틀링에 걸리게 됩니다.
+데모 어플리케이션에서 사용된 t3.micro의 경우 CPU 사용률 10프로에서 스로틀링이 걸리게 됩니다.
+
+![image](/images/20_ec2/experiment04_09.png)
+![image](/images/20_ec2/experiment04_10.png)
 
 ### 그룹토론
 
-실험 계획과 예상 결과를 작성해보기 (5분 작성 / 10분 발표 토론)
+개선 계획과 예상 결과를 작성해보기 (5분 작성 / 10분 발표 토론)
