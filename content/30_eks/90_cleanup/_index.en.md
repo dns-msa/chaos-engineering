@@ -9,8 +9,8 @@ weight: 90
 🎉  Congrats! You've reached the end of the module.
 Run the cleanup script on your workspace to remove all resources we've created in this module:
 ```
-cd ~/environment/fisworkshop/eks/cdk/
-./cleanup.sh
+cd ~/environment/fisworkshop/eks/cdk
+bash cleanup.sh
 ```
 
 {{% children showhidden="true" %}}

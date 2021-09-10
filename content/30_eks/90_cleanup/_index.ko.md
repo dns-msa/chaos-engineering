@@ -10,8 +10,8 @@ weight: 90
 실습 환경에서 아래의 스크립트를 실행하여 생성한 자원들을 삭제합니다.
 
 ```
-cd ~/environment/fisworkshop/eks/cdk/
-./cleanup.sh
+cd ~/environment/fisworkshop/eks/cdk
+bash cleanup.sh
 ```
 
 {{% children showhidden="true" %}}
