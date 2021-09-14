@@ -20,9 +20,9 @@ Cluster Autoscaler is a tool that automatically adjusts the size of the Kubernet
 
 Cluster Autoscaler provides integration with Auto Scaling groups. Cluster Autoscaler will attempt to determine the CPU, memory, and GPU resources provided by an EC2 Auto Scaling Group based on the instance type specified in its Launch Configuration or Launch Template. Click [here](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws) for more information.
 
-Watch the logs to verify cluster autoscaler is installed properly. If everything looks good, we are now ready to scale our cluster.
+Watch the logs to verify cluster autoscaler is installed properly. If everything looks good, without error log, we are now ready to scale our cluster.
 ```sh
-kubectl -n kube-system logs -f deployment/cluster-autoscaler
+kubectl -n kube-system logs -l app.kubernetes.io/name=aws-cluster-autoscaler
 ```
 
 Scale out pods for high availability.
