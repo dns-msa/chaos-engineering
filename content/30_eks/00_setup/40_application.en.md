@@ -10,7 +10,7 @@ For this lab, we picked up the Sock Shop application. Sock Shop is a microservic
 
 Create the namespace and deploy application.
 ```sh
-cd ~/environments/fisworkshop/eks/
+cd ~/environment/fisworkshop/eks/
 kubectl apply -f kubernetes/manifest/sockshop-demo.yaml
 ```
 
