@@ -1,6 +1,6 @@
 ---
 title: "AWS CLI"
-weight: 10
+weight: 20
 chapter: false
 draft: false
 ---

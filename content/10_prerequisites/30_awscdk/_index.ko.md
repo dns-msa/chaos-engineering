@@ -1,6 +1,6 @@
 ---
 title: "AWS CDK"
-weight: 10
+weight: 30
 chapter: false
 draft: false
 ---
