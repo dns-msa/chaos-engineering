@@ -8,6 +8,8 @@ weight: 11
 
 클라우드 와치(CloudWatch)는 자동으로 CPU, 메모리, 디스크, 네트워크와 같은 자원들의 지표를 수집합니다. 컨테이너 인사이츠 또한 진단 및 분석을 위한 정보들을 제공합니다. 실패에의한 컨테이너 재시작 같은 진단 정보를 제공함으로써 사용자가 빠르게 문제를 분석하고 조치할 수 있도록 돕습니다. 그리고 클라우드 와치 알람을 설정하여 특정 조건에 따른 경보를 발생할 수 있으며, 경보를 수신하여 자동으로 문제를 수습할 수 있도록 자동화할 수 있습니다.
 
-![amazon-cloudwatch-container-insights](/images/30_eks/aws-cw-container-insights.png)
-
 이제 클라우드 와치 서비스 화면으로 이동하여 컨테이너 인사이츠(Container Insights)를 찾습니다. 왼 쪽 내비게이션 바의 아래 쪽에 있습니다. 여러 분의 컨테이너에 대한 대시보드를 새로고침하여 지표가 잘 수집되고 있는 지 확인합니다. 시스템이 일반적인 정상 상태인 지 확인합니다.
+
+![amazon-cloudwatch-container-insights-dashboard](/images/30_eks/aws-cw-container-insights-dashboard.png)
+
+![amazon-cloudwatch-container-insights-mapview](/images/30_eks/aws-cw-container-insights-mapview.png)
