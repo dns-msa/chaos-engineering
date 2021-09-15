@@ -31,12 +31,18 @@ cd ~/environment/fisworkshop/eks/
 kubectl apply -f kubernetes/manifest/sockshop-demo-ha.yaml
 ```
 
+모드 포드 또는 컨테이너가 준비가 될 때까지 기다립니다:
+```sh
+kubectl -n sockshop get pods -w
+```
+`CTRL+C`를 눌러서 빠져 나옵니다.
+
 ## 재실험을 통한 가설 검증
 
 AWS FIS 서비스 페이지로 돌아갑니다. 실험 템플릿 목록 중에서 `TerminateEKSNodes`을 선택합니다. 화면 오른 쪽 상단에 있는 **작업** 단추를 누르고 **실험 시작** 을 눌러서 실험을 재시작 합니다. AWS FIS는 EKS 노드를 다시 종료시킬 것입니다. EC2 서비스 페이지로 이동해 보면 종료 중인 EKS 노드들을 볼 수 있습니다. 그리고 EKS 노드가 종료된 다음에는 새 인스턴스가 생성되는 것을 볼 수 있습니다.
 
 ```sh
-kubectl -n sockshop get node -w
+kubectl get nodes -w
 ```
 ```sh
 NAME                                            STATUS   ROLES    AGE     VERSION

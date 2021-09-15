@@ -31,12 +31,18 @@ cd ~/environment/fisworkshop/eks/
 kubectl apply -f kubernetes/manifest/sockshop-demo-ha.yaml
 ```
 
+And wait util all pods/containers are running:
+```sh
+kubectl -n sockshop get pods -w
+```
+Enter `CTRL+C` to exit watch mode
+
 ## Rerun Experiment
 
-Back to the AWS FIS service page and select `TerminateEKSNodes` and start the experiment using **Actions** button. AWS FIS shuts down EKS nodes again. On the EC2 service page, you will see the instances being terminated. And you can see that new instances are created right after the EKS nodes are shut down.
+Back to the AWS FIS service page and select `Terminate EKS nodes` and start the experiment using **Actions** button. AWS FIS shuts down EKS nodes again. On the EC2 service page, you will see the instances being terminated. And you can see that new instances are created right after the EKS nodes are shut down.
 
 ```sh
-kubectl -n sockshop get node -w
+kubectl get nodes -w
 ```
 ```sh
 NAME                                            STATUS   ROLES    AGE     VERSION

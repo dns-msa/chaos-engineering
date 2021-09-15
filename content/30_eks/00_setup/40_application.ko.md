@@ -16,7 +16,7 @@ kubectl apply -f kubernetes/manifest/sockshop-demo.yaml
 
 배포가 잘 되었는 지 확인해 보겠습니다:
 ```sh
-kubectl -n sockshop get pod -l name=front-end
+kubectl -n sockshop get pods -l name=front-end
 ```
 출력 결과가 다음과 비슷하면 정상적으로 배포가 된 것입니다:
 ```sh

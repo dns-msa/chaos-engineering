@@ -16,7 +16,7 @@ kubectl apply -f kubernetes/manifest/sockshop-demo.yaml
 
 Verify that the pod came up fine (ensure nothing else is running on port 8079):
 ```sh
-kubectl -n sockshop get pod -l name=front-end
+kubectl -n sockshop get pods -l name=front-end
 ```
 
 The output will be something like this:
