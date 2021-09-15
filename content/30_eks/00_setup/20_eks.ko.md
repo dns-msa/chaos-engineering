@@ -9,6 +9,11 @@ weight: 20
 이 모듈을 실습하기 위해서는 EKS 클러스터를 생성해야 합니다. 먼저, 클러스터를 생성할 수 있는 권한이 잘 적용되어 있는 지 확인합니다.
 `aws sts get-caller-identity` 명령을 이용하여 `ChaosEngineeringWorkshop-Admin` 역할과 인스턴스 ID가 잘 출력되는 지 점검합니다.
 ```sh
+aws sts get-caller-identity
+```
+
+출력은 아래와 비슷할 것입니다:
+```sh
 {
     "Account": "123456789012",
     "UserId": "AROA1SAMPLEAWSIAMROLE:i-01234567890abcdef",
@@ -35,15 +40,15 @@ EKS 클러스터와 관련된 의존성들을 띄우는 데 약 15분 정도 소
 
 ## kubeconfig 저장
 
-쿠버네티스 클러스터를 kubectl로 관리하기 위해서는 aws eks update-kubeconfig 명령을 실행해야 합니다. 이 명령은 실습 환경에 kubeconfig 설정 파일을 저장합니다:
+쿠버네티스 클러스터를 kubectl로 관리하기 위해서는 `aws eks update-kubeconfig` 명령을 실행해야 합니다. 이 명령은 실습 환경에 kubeconfig 설정 파일을 저장합니다:
 ```
 Outputs:
-ClusterConfigCommand43AAE40F = aws eks update-kubeconfig --name cluster-xxxxx --role-arn arn:aws:iam::112233445566:role/yyyyy
+ClusterConfigCommand43AAE40F = aws eks update-kubeconfig --name <your cluster name will be here> --role-arn <your role arn will be here>
 ```
 
 AWS CDK의 출력으로 나온 명령을 실습 환경 터미널에 붙여넣기하여 실행합니다. 이 명령은 아래와 비슷한 모양을 하고 있습니다. kubeconfig 파일을 새로 생성하거나 갱신합니다:
 ```sh
-aws eks update-kubeconfig --name cluster-xxxxx --role-arn arn:aws:iam::112233445566:role/yyyyy
+aws eks update-kubeconfig --name <your cluster name will be here> --role-arn <your role arn will be here>
 ```
 
 ## 클러스터 확인

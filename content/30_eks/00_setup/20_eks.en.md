@@ -6,7 +6,12 @@ weight: 20
 
 ## Prerequisites
 
-Run aws sts get-caller-identity and validate that your ARN contains `ChaosEngineeringWorkshop-Admin` and Instance Id.
+Run `aws sts get-caller-identity` and validate that your ARN contains `ChaosEngineeringWorkshop-Admin` and Instance Id.
+```sh
+aws sts get-caller-identity
+```
+
+The output looks as below:
 ```sh
 {
     "Account": "123456789012",
@@ -34,15 +39,15 @@ Launching EKS and all the dependencies will take approximately 15 minutes :coffe
 
 ## Update kubeconfig
 
-In order to interact with your cluster through kubectl, you can use the aws eks update-kubeconfig AWS CLI command to configure your local kubeconfig. The EKS module will define a CloudFormation output in your stack which contains the command to run. For example:
+In order to interact with your cluster through kubectl, you can use the `aws eks update-kubeconfig` AWS CLI command to configure your local kubeconfig. The EKS module will define a CloudFormation output in your stack which contains the command to run. For example:
 ```
 Outputs:
-ClusterConfigCommand43AAE40F = aws eks update-kubeconfig --name cluster-xxxxx --role-arn arn:aws:iam::112233445566:role/yyyyy
+ClusterConfigCommand43AAE40F = aws eks update-kubeconfig --name <your cluster name will be here> --role-arn <your role arn will be here>
 ```
 
 Copy the output value and execute that aws eks update-kubeconfig command in your terminal to create or update a local kubeconfig context:
 ```sh
-aws eks update-kubeconfig --name cluster-xxxxx --role-arn arn:aws:iam::112233445566:role/yyyyy
+aws eks update-kubeconfig --name <your cluster name will be here> --role-arn <your role arn will be here>
 ```
 
 ## Test the Cluster
