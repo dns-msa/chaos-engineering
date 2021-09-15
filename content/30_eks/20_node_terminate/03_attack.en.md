@@ -31,3 +31,11 @@ ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.2
 ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
 ```
 Enter `CTRL+C` to exit watch mode
+
+Perhaps the application is broken as you can see in the picture below.
+
+![weaveworks-sockshop-container-restart](/images/30_eks/weaveworks-sockshop-container-restart.png)
+
+![weaveworks-sockshop-frontend-broken](/images/30_eks/weaveworks-sockshop-frontend-broken.png)
+
+![weaveworks-sockshop-catalogue-broken](/images/30_eks/weaveworks-sockshop-catalogue-broken.png)

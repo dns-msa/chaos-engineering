@@ -31,3 +31,11 @@ ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.2
 ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
 ```
 `CTRL+C`를 눌러서 빠져 나옵니다.
+
+아래 그림에서 볼 수 있듯이 응용 프로그램이 손상되었을 수 있습니다.
+
+![weaveworks-sockshop-container-restart](/images/30_eks/weaveworks-sockshop-container-restart.png)
+
+![weaveworks-sockshop-frontend-broken](/images/30_eks/weaveworks-sockshop-frontend-broken.png)
+
+![weaveworks-sockshop-catalogue-broken](/images/30_eks/weaveworks-sockshop-catalogue-broken.png)
