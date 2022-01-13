@@ -58,7 +58,9 @@ public List<ProductComposite.Recommendation> fallback(Exception e){
 
 The demo application does not have a reliable CI/CD process. Simply download the built code and restart the process on EC2.
 
+{{% notice info %}}
 As a result, some errors may appear during deployment. Although we will not cover this scope of the current workshop, you can understand why you need a reliable CI/CD process. 
+{{% /notice %}}
 
 ```bash
 cd ~/environment/fisworkshop/ec2/
