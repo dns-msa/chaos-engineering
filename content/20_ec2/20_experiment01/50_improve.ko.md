@@ -62,8 +62,7 @@ public List<ProductComposite.Recommendation> fallback(Exception e){
 
 ```bash
 cd ~/environment/fisworkshop/ec2/
-./chaos-04-redeploy-product-composite.sh
-
+./chaos-04-redeploy-recommendation.sh
 ```
 
 ### 실험 반복을 통한 개선사항 확인

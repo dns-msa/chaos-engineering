@@ -62,8 +62,7 @@ As a result, some errors may appear during deployment. Although we will not cove
 
 ```bash
 cd ~/environment/fisworkshop/ec2/
-./chaos-04-redeploy-product-composite.sh
-
+./chaos-04-redeploy-recommendation.sh
 ```
 
 ### Check for improvement through experiment iteration
