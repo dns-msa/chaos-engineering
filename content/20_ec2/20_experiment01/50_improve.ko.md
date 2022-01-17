@@ -58,12 +58,13 @@ public List<ProductComposite.Recommendation> fallback(Exception e){
 
 샘플 어플리케이션에는 안정적인 CI/CD 프로세스가 적용되어 있지는 않습니다. 단순히 빌드된 코드를 가져와서 EC2에서 프로세스를 재기동합니다.
 
+{{% notice info %}}
 이에 따라 배포 도중 오류가 나타날 수 있습니다. 현재 워크샵의 범위에서 다루지는 않지만, 왜 안정적인 CI/CD 프로세스가 필요한지 생각해 볼 수 있는 부분입니다.
+{{% /notice %}}
 
 ```bash
 cd ~/environment/fisworkshop/ec2/
-./chaos-04-redeploy-product-composite.sh
-
+./chaos-04-redeploy-recommendation.sh
 ```
 
 ### 실험 반복을 통한 개선사항 확인
