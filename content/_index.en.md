@@ -16,4 +16,6 @@ On “day one,” you’ll start by setting up the infrastructure for the online
 
 Before “day two,” you’ll have the opportunity to run Chaos Engineering experiments on your environment to ensure that what you set up is working as expected. You’ll also learn how to get ahead of potential issues before the store opens again for “day two.”
 
+![aws-fis](/images/aws-fis-overview.png)
+
 ![architecture](/images/aws-chaos-engineering-workshop-architecture.png)

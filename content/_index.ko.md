@@ -11,4 +11,6 @@ weight: 1
 
 효율적이고 안정적인 서비스 운영을 위한 카오스 엔지니어링을 향한 여정을 시작하겠습니다.
 
+![aws-fis](/images/aws-fis-overview.png)
+
 ![architecture](/images/aws-chaos-engineering-workshop-architecture.png)
